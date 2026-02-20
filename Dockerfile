@@ -1,5 +1,5 @@
 # ══════════════════════════════════════════════════════════════════════════════
-#  hyper-sense-backend  ·  Dockerfile (Render-optimized)
+#  hyper-sense-backend  ·  Dockerfile (Fixed for PermissionError)
 #  Multi-stage build → final image ~200 MB with YOLO26n pre-downloaded
 # ══════════════════════════════════════════════════════════════════════════════
 
@@ -37,14 +37,13 @@ WORKDIR /app
 
 COPY main.py .
 
-# Pre-download YOLO model (runs as appuser)
-USER appuser
+# Pre-download YOLO model AS ROOT (before USER appuser) → fixes PermissionError
 RUN python -c "from ultralytics import YOLO; YOLO('yolo26n.pt')"
+
+# Now switch to non-root user
+USER appuser
 
 EXPOSE 8000
 
-# ── IMPORTANT CHANGE FOR RENDER ───────────────────────────────────────────────
-# Use $PORT (Render sets this automatically, default 10000)
-# Falls back to 8000 when running locally
-# Workers=1 for free tier (512 MB RAM)
+# CMD for Railway/Render (uses $PORT, workers=1 for free tier)
 CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000} --workers 1 --no-access-log"]
