@@ -1,0 +1,19 @@
+# ─── Web Framework ────────────────────────────────────────────────────────────
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0          # production ASGI server with extras (httptools, websockets, etc.)
+python-multipart>=0.0.9            # required for File / UploadFile in FastAPI
+
+# ─── AI / Vision ──────────────────────────────────────────────────────────────
+ultralytics>=8.3.0                 # YOLO family – downloads yolo26n.pt on first use
+# torch / torchvision are pulled in automatically by ultralytics;
+# for CPU-only inference on a Raspberry Pi / cheap VPS they will be the slim
+# torch CPU builds.  Remove the lines below if you want GPU support instead.
+torch>=2.2.0
+torchvision>=0.17.0
+
+# ─── Image handling ───────────────────────────────────────────────────────────
+Pillow>=10.0.0
+numpy>=1.26.0
+
+# ─── Utilities ────────────────────────────────────────────────────────────────
+python-dateutil>=2.9.0            # convenient UTC timestamp helper
